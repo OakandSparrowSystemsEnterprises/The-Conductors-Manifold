@@ -8,7 +8,7 @@
 
 ## 1. Abstract
 
-The Conductor's Manifold is a novel methodology for observing, interpreting, and understanding complex systems in real-time. Traditional analysis focuses on past data points, often missing the underlying dynamics driving behavior. This framework treats systems—such as financial markets, networks, or cultural trends—as living geometric manifolds. By analyzing curvature, tension, and flow across multiple scales, the framework provides actionable insights into the current state and structural evolution of any system. It offers a decisive interpretive advantage, replacing reactive prediction with real-time structural understanding.
+The Conductor's Manifold is a novel methodology for observing, interpreting, and understanding complex systems in real-time. Traditional analysis focuses on past data points, often missing the underlying dynamics driving behavior. This framework treats systems—such as financial markets, networks, or cultural trends—as living geometric structures. By analyzing curvature, tension, and flow across multiple scales, the framework provides actionable insights into the current state and structural evolution of any system. It offers a decisive interpretive advantage, replacing reactive prediction with real-time structural understanding.
 
 ## 2. Introduction
 
@@ -30,7 +30,7 @@ Analysts using the framework act as conductors, interpreting the symphony of mov
 
 ## 4. Application
 
-The Conductor’s Manifold functions as a diagnostic lens that maps naturally onto any complex domain. It aligns with financial markets by revealing structural imbalances, emergent flows, and latent attractors. It maps onto cultural or social networks by identifying shifts in collective behavior and emerging thematic structures. It applies to policy and infrastructure by illuminating system-wide pressure points and areas of potential failure. By interpreting system behavior as a living manifold, practitioners gain a lens that is both descriptive and diagnostic, revealing real-time evolution without reliance on probabilistic prediction.
+The Conductor’s Manifold functions as a diagnostic lens that maps naturally onto any complex domain. It aligns with financial markets by revealing structural imbalances, emergent flows, and latent attractors. It maps onto cultural or social networks by identifying shifts in collective behavior and emerging thematic structures. It applies to policy and infrastructure by illuminating system-wide pressure points and areas of potential failure. By interpreting system behavior as a living system, practitioners gain a lens that is both descriptive and diagnostic, revealing real-time evolution without reliance on probabilistic prediction.
 
 ## 5. Access and Usage
 
@@ -49,5 +49,6 @@ Inquiries regarding access or subscription initiation are welcome.
 The Conductor’s Manifold represents a paradigm shift in the observation and interpretation of complex systems. By combining geometric reasoning, fractal analysis, and multi-scale observation, it reveals hidden structure with clarity and immediacy. The framework is adaptive, alive, and designed to convert structural insight into actionable understanding. This document marks the first formal articulation of a methodology intended for ongoing refinement and evolution.
 
 ---
+
 
 © 2025 Joshua Johosky. All Rights Reserved.

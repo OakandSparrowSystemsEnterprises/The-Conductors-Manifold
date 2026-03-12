@@ -2,6 +2,7 @@
 
 Since Conception and in Continuous use. Copyright and IP protected Oak and Sparrow Systems Enterprise LLC
 
+
 ## Real-Time Interpretation of Complex Systems
 
 The Conductor's Manifold is a novel methodology for observing, interpreting, and understanding complex systems in real-time.
