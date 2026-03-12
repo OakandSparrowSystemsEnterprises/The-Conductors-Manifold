@@ -65,29 +65,29 @@ services:
     networks:
       - manifold-network
 
-  # Monitoring (Optional) - DISABLED FOR DEMO
-  # prometheus:
-  #   image: prom/prometheus:latest
-  #   ports:
-  #     - "9090:9090"
-  #   volumes:
-  #     - ./config/prometheus.yml:/etc/prometheus/prometheus.yml
-  #     - prometheus_data:/prometheus
-  #   networks:
-  #     - manifold-network
+  # Monitoring (Optional)
+  prometheus:
+    image: prom/prometheus:latest
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./config/prometheus.yml:/etc/prometheus/prometheus.yml
+      - prometheus_data:/prometheus
+    networks:
+      - manifold-network
 
-  # grafana:
-  #   image: grafana/grafana:latest
-  #   ports:
-  #     - "3001:3000"
-  #   environment:
-  #     - GF_SECURITY_ADMIN_PASSWORD=admin
-  #   volumes:
-  #     - grafana_data:/var/lib/grafana
-  #   depends_on:
-  #     - prometheus
-  #   networks:
-  #     - manifold-network
+  grafana:
+    image: grafana/grafana:latest
+    ports:
+      - "3001:3000"
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+    volumes:
+      - grafana_data:/var/lib/grafana
+    depends_on:
+      - prometheus
+    networks:
+      - manifold-network
 
 volumes:
   postgres_data:

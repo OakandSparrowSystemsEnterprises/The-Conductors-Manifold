@@ -134,42 +134,6 @@ class AlphaVantageDataFeed(DataFeed):
             market_data.sort(key=lambda x: x.timestamp)
             return market_data
 
-    async def get_current_price(self, symbol: str) -> float:
-        """
-        Get the current real-time price for a stock.
-
-        Args:
-            symbol: Stock ticker (e.g., 'AAPL')
-
-        Returns:
-            Current price as float
-        """
-        await self.connect()
-
-        params = {
-            "function": "GLOBAL_QUOTE",
-            "symbol": symbol,
-            "apikey": self.api_key or "demo"
-        }
-
-        try:
-            async with self.session.get(self.BASE_URL, params=params) as response:
-                data = await response.json()
-
-                if "Global Quote" not in data:
-                    raise ValueError(f"No quote data found for {symbol}")
-
-                quote = data["Global Quote"]
-                price = float(quote.get("05. price", 0))
-
-                if price == 0:
-                    raise ValueError(f"Invalid price for {symbol}")
-
-                return price
-
-        except Exception as e:
-            raise ValueError(f"Failed to get current price from Alpha Vantage: {str(e)}")
-
 
 class BinanceDataFeed(DataFeed):
     """Binance Global API data feed for crypto (not available in USA)"""
@@ -325,39 +289,6 @@ class BinanceUSDataFeed(DataFeed):
         except Exception as e:
             raise ValueError(f"Failed to fetch data from Binance.US: {str(e)}")
 
-    async def get_current_price(self, symbol: str) -> float:
-        """
-        Get the current real-time price for a symbol.
-
-        Args:
-            symbol: Trading pair (e.g., 'BTCUSDT')
-
-        Returns:
-            Current price as float
-        """
-        await self.connect()
-
-        # Binance.US uses USDT pairs
-        if not symbol.endswith("USDT") and not symbol.endswith("USD"):
-            symbol = f"{symbol}USDT"
-
-        params = {"symbol": symbol.upper()}
-
-        try:
-            async with self.session.get(
-                f"{self.BASE_URL}/ticker/price",
-                params=params
-            ) as response:
-                if response.status != 200:
-                    text = await response.text()
-                    raise ValueError(f"Binance.US ticker API error: {text}")
-
-                data = await response.json()
-                return float(data['price'])
-
-        except Exception as e:
-            raise ValueError(f"Failed to get current price from Binance.US: {str(e)}")
-
     async def subscribe_realtime(
         self,
         symbol: str,
@@ -475,28 +406,13 @@ class DataIngestionService:
     Main service for managing data feeds and caching.
     """
 
-    def __init__(self, cache_ttl_seconds: int = 300):
+    def __init__(self):
         self.feeds: Dict[str, DataFeed] = {}
-        self.cache: Dict[str, tuple[List[MarketData], float]] = {}  # (data, timestamp)
-        self.cache_ttl = cache_ttl_seconds  # Cache expires after 5 minutes by default
+        self.cache: Dict[str, List[MarketData]] = {}
 
     def register_feed(self, name: str, feed: DataFeed):
         """Register a data feed"""
         self.feeds[name] = feed
-
-    def clear_cache(self, feed_name: Optional[str] = None, symbol: Optional[str] = None):
-        """
-        Clear cached data. If feed_name and symbol are provided, only clear that specific cache.
-        Otherwise, clear all caches.
-        """
-        if feed_name and symbol:
-            # Clear specific symbol cache
-            keys_to_remove = [k for k in self.cache.keys() if k.startswith(f"{feed_name}:{symbol}:")]
-            for key in keys_to_remove:
-                del self.cache[key]
-        else:
-            # Clear all caches
-            self.cache.clear()
 
     async def fetch_data(
         self,
@@ -521,14 +437,11 @@ class DataIngestionService:
         """
         cache_key = f"{feed_name}:{symbol}:{interval}"
 
-        # Check cache with expiration
+        # Check cache
         if use_cache and cache_key in self.cache:
-            cached_data, cached_time = self.cache[cache_key]
-            cache_age = datetime.now().timestamp() - cached_time
-
-            # Return cached data only if it's fresh enough AND has enough data points
-            if cache_age < self.cache_ttl and len(cached_data) >= limit:
-                return cached_data[-limit:]
+            cached = self.cache[cache_key]
+            if len(cached) >= limit:
+                return cached[-limit:]
 
         # Fetch from feed
         if feed_name not in self.feeds:
@@ -537,38 +450,10 @@ class DataIngestionService:
         feed = self.feeds[feed_name]
         data = await feed.fetch_historical(symbol, interval, limit)
 
-        # Update cache with current timestamp
-        self.cache[cache_key] = (data, datetime.now().timestamp())
+        # Update cache
+        self.cache[cache_key] = data
 
         return data
-
-    async def get_current_price(
-        self,
-        feed_name: str,
-        symbol: str
-    ) -> float:
-        """
-        Get the current real-time price for a symbol.
-
-        Args:
-            feed_name: Name of registered feed
-            symbol: Trading symbol
-
-        Returns:
-            Current price as float
-        """
-        if feed_name not in self.feeds:
-            raise ValueError(f"Feed '{feed_name}' not registered")
-
-        feed = self.feeds[feed_name]
-
-        # Check if feed supports get_current_price
-        if not hasattr(feed, 'get_current_price'):
-            # Fallback: use last price from historical data
-            data = await self.fetch_data(feed_name, symbol, "1d", 1, use_cache=False)
-            return float(data[-1].close) if data else 0.0
-
-        return await feed.get_current_price(symbol)
 
     def to_numpy(self, data: List[MarketData]) -> Dict[str, np.ndarray]:
         """

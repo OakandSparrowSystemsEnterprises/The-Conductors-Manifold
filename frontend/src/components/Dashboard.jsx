@@ -55,24 +55,7 @@ const Dashboard = () => {
   const loadManifoldData = async () => {
     setLoading(true);
     try {
-      // Map timescale to correct interval format for each feed
-      const intervalMap = {
-        'binanceus': {
-          'intraday': '1h',
-          'daily': '1d',
-          'weekly': '1w',
-          'monthly': '1M'
-        },
-        'alphavantage': {
-          'intraday': '60min',
-          'daily': 'daily',
-          'weekly': 'weekly',
-          'monthly': 'monthly'
-        }
-      };
-
-      const interval = intervalMap[feed]?.[timescale] || '1d';
-      const data = await api.analyzeSymbol(symbol, feed, interval, 100, timescale);
+      const data = await api.analyzeSymbol(symbol, feed, timescale);
       setManifoldData(data);
     } catch (error) {
       console.error('Failed to load manifold data:', error);

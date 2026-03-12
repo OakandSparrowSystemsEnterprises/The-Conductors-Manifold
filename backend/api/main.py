@@ -497,7 +497,6 @@ async def get_manifold_pulse(
     This is ideal for the "Continuous Readout" subscription tier.
     """
     try:
-        # Fetch historical data for analysis
         market_data = await data_service.fetch_data(feed, symbol, "1d", 100)
         data_arrays = data_service.to_numpy(market_data)
 
@@ -507,8 +506,8 @@ async def get_manifold_pulse(
             volume=data_arrays['volume']
         )
 
-        # Get REAL-TIME current price (not historical)
-        current_price = await data_service.get_current_price(feed, symbol)
+        # Calculate pulse indicators
+        current_price = float(data_arrays['prices'][-1])
         current_entropy = float(metrics.local_entropy[-1])
         current_tension = float(metrics.tension[-1])
 
