@@ -1,6 +1,6 @@
 # The Conductor's Manifold
 
-© 2025 Joshua Johosky, Architect Of The New Future. All Rights Reserved.
+Since Conception and in Continuous use. Copyright and IP protected Oak and Sparrow Systems Enterprise LLC
 
 ## Real-Time Interpretation of Complex Systems
 
@@ -95,4 +95,5 @@ Access to live readouts, deep analysis, or targeted insights is managed through 
 
 
 All contents of this repository are protected by copyright. Reproduction, redistribution, or derivative work without explicit authorization is strictly prohibited. See **LICENSE.md** for details.
+
 
